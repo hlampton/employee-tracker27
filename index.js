@@ -1,3 +1,6 @@
+const inquirer = require('inquirer');
+const mysql = require('mysql2/promise');
+
 // Define a function to handle the command prompt
 async function promptUser() {
     const answer = await inquirer.prompt({
@@ -173,3 +176,48 @@ async function promptUser() {
             console.log(error);
         });
     };
+
+const db = await mysql.createConnection({
+  host: 'localhost',
+  user: 'your_username',
+  password: 'your_password',
+  database: 'your_database',
+});
+
+async function start() {
+  while (true) {
+    const action = await promptUser();
+    switch (action) {
+      case 'View All Department':
+        await viewAllDepartments();
+        break;
+      case 'View All Roles':
+        await viewAllRoles();
+        break;
+      case 'View All Employees':
+        await viewAllEmployees();
+        break;
+      case 'Add A Department':
+        await addDepartment();
+        break;
+      case 'Add A Role':
+        await addRole();
+        break;
+      case 'Add An Employee':
+        await addEmployee();
+        break;
+      case 'Update An Employee Role':
+        await updateEmployeeRole();
+        break;
+      case 'Log Out':
+        console.log('Goodbye!');
+        db.end();
+        return;
+      default:
+        console.log(`Invalid action: ${action}`);
+        break;
+    }
+  }
+}
+
+start();
